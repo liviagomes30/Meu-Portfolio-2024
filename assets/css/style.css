@@ -499,7 +499,7 @@ textarea {
   color: var(--color-white);
 }
 .form-button > .btn:hover {
-  background: #00b5e7;
+  background: var(--text-color-third);
 }
 .form-button i {
   font-size: 18px;
