@@ -388,8 +388,7 @@ h3 {
   gap: 20px;
   flex-wrap: wrap;
 }
-.project-box {
-}
+
 .project-link > i {
   font-size: 50px;
   color: #1e9fab;
@@ -469,10 +468,12 @@ h3 {
 }
 .form-inputs {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   width: 100%;
 }
 .input-field {
+  flex: 1;
   width: 50%;
   height: 55px;
   background: transparent;
@@ -491,14 +492,14 @@ textarea {
   outline: none;
   resize: none;
 }
-.form-button > .btn {
+.btn.form-button {
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--second-color);
   color: var(--color-white);
 }
-.form-button > .btn:hover {
+.btn.form-button:hover {
   background: var(--text-color-third);
 }
 .form-button i {

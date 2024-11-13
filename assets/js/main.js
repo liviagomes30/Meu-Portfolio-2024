@@ -109,32 +109,77 @@ function scrollActive() {
 
 window.addEventListener("scroll", scrollActive);
 
-document.getElementById("enviar").addEventListener("click", function () {
-  var nome = document.getElementById("nome").value;
-  var email = document.getElementById("email").value;
-  var mensagem = document.getElementById("mensagem").value;
+/* ----- FORM ----- */
+// const script_google =
+//   "https://script.google.com/macros/s/AKfycbzOijVX1UWtLeEB2lmGMYmay9KAJTMG1YsSOLAZmhcnTpL3vDdznL92RKHS4n0uERJF3g/exec";
+// const dados_formulario = document.forms["formulario-contato"];
 
+// dados_formulario.addEventListener("submit", function (e) {
+//   e.preventDefault();
+
+//   fetch(script_google, { method: "POST", body: new FormData(dados_formulario) })
+//     .then((response) => {
+//       alert("Dados enviados com sucesso!", response);
+//       dados_formulario.reset();
+//     })
+//     .catch((error) => console.error("Erro no envio dos dados!", error));
+// });
+
+document.getElementById("form").addEventListener("submit", function (e) {
+  e.preventDefault(); // Prevent the default form submission
+  document.getElementById("message").textContent = "Submitting..";
+  document.getElementById("message").style.display = "block";
+  document.getElementById("enviar").disabled = true;
+
+  // Collect the form data
+  var formData = new FormData(this);
+  var keyValuePairs = [];
+  for (var pair of formData.entries()) {
+    keyValuePairs.push(pair[0] + "=" + pair[1]);
+  }
+
+  var formDataString = keyValuePairs.join("&");
+
+  // Send a POST request to your Google Apps Script
   fetch(
     "https://script.google.com/macros/s/AKfycbzOijVX1UWtLeEB2lmGMYmay9KAJTMG1YsSOLAZmhcnTpL3vDdznL92RKHS4n0uERJF3g/exec",
     {
+      redirect: "follow",
       method: "POST",
-      mode: "cors", // Importante para lidar com CORS
+      body: formDataString,
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "text/plain;charset=utf-8",
       },
-      body: new URLSearchParams({
-        nome: nome,
-        email: email,
-        mensagem: mensagem,
-      }),
     }
   )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Erro na resposta do servidor");
+    .then(function (response) {
+      // Check if the request was successful
+      if (response) {
+        return response; // Assuming your script returns JSON response
+      } else {
+        throw new Error("Failed to submit the form.");
       }
-      return response.text();
     })
-    .then((data) => alert("Mensagem enviada com sucesso!"))
-    .catch((error) => alert("Erro ao enviar mensagem: " + error.message));
+    .then(function (data) {
+      // Display a success message
+      document.getElementById("message").textContent =
+        "Data submitted successfully!";
+      document.getElementById("message").style.display = "block";
+      document.getElementById("message").style.backgroundColor = "green";
+      document.getElementById("message").style.color = "beige";
+      document.getElementById("enviar").disabled = false;
+      document.getElementById("form").reset();
+
+      setTimeout(function () {
+        document.getElementById("message").textContent = "";
+        document.getElementById("message").style.display = "none";
+      }, 2600);
+    })
+    .catch(function (error) {
+      // Handle errors, you can display an error message here
+      console.error(error);
+      document.getElementById("message").textContent =
+        "An error occurred while submitting the form.";
+      document.getElementById("message").style.display = "block";
+    });
 });
