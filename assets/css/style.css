@@ -667,7 +667,7 @@ footer {
   .project-container {
     justify-content: center;
   }
-  .project-box {
+  .project-link {
     width: 80%;
   }
 }
@@ -678,7 +678,7 @@ footer {
   .featured-name {
     font-size: 40px;
   }
-  .project-box {
+  .project-link {
     width: 100%;
   }
   .form-inputs {
