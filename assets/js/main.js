@@ -109,22 +109,6 @@ function scrollActive() {
 
 window.addEventListener("scroll", scrollActive);
 
-/* ----- FORM ----- */
-// const script_google =
-//   "https://script.google.com/macros/s/AKfycbzOijVX1UWtLeEB2lmGMYmay9KAJTMG1YsSOLAZmhcnTpL3vDdznL92RKHS4n0uERJF3g/exec";
-// const dados_formulario = document.forms["formulario-contato"];
-
-// dados_formulario.addEventListener("submit", function (e) {
-//   e.preventDefault();
-
-//   fetch(script_google, { method: "POST", body: new FormData(dados_formulario) })
-//     .then((response) => {
-//       alert("Dados enviados com sucesso!", response);
-//       dados_formulario.reset();
-//     })
-//     .catch((error) => console.error("Erro no envio dos dados!", error));
-// });
-
 document.getElementById("form").addEventListener("submit", function (e) {
   e.preventDefault(); // Prevent the default form submission
   document.getElementById("message").textContent = "Submitting..";
@@ -147,6 +131,7 @@ document.getElementById("form").addEventListener("submit", function (e) {
       redirect: "follow",
       method: "POST",
       body: formDataString,
+      mode: "no-cors",
       headers: {
         "Content-Type": "text/plain;charset=utf-8",
       },
@@ -183,3 +168,34 @@ document.getElementById("form").addEventListener("submit", function (e) {
       document.getElementById("message").style.display = "block";
     });
 });
+
+/*
+No Google Sheets:
+const DATA_ENTRY_SHEET_NAME = "Dados";
+const TIME_STAMP_COLUMN_NAME = "Timestamp"; 
+var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ENTRY_SHEET_NAME);
+const doPost = (request = {}) => {
+  const { postData: { contents, type } = {} } = request;
+  var data = parseFormData(contents);
+  appendToGoogleSheet(data);
+ return ContentService.createTextOutput(contents).setMimeType(ContentService.MimeType.JSON);
+};
+function parseFormData(postData) {
+  var data = [];
+  var parameters = postData.split('&');
+  for (var i = 0; i < parameters.length; i++) {
+    var keyValue = parameters[i].split('=');
+    data[keyValue[0]] = decodeURIComponent(keyValue[1]);
+  }
+  return data;
+}
+function appendToGoogleSheet(data) {
+  if(TIME_STAMP_COLUMN_NAME !==""){
+    data[TIME_STAMP_COLUMN_NAME]=new Date();
+  }
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var rowData = headers.map(headerFld => data[headerFld]);
+  sheet.appendRow(rowData);
+}
+
+*/
