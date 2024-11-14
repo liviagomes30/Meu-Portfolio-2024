@@ -119,6 +119,6 @@ form.addEventListener("submit", (e) => {
     .then((response) => response.json())
     .then((html) => {
       localStorage.setItem("formSubmitted", "true");
-      window.location.href = "index.html";
+      window.open("index.html", "_self");
     });
 });
