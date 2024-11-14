@@ -23,6 +23,12 @@
     <title>Portfólio</title>
   </head>
   <body>
+    <div id="customModal" class="modal hidden">
+      <div class="modal-content">
+        <p>Mensagem enviada com sucesso!</p>
+        <button onclick="closeModal()">Fechar</button>
+      </div>
+    </div>
     <div class="container">
       <!-- --------------- HEADER --------------- -->
       <nav id="header">
@@ -246,9 +252,9 @@
               <div class="form-control">
                 <form
                   class="form-inputs"
-                  method="post"
-                  name="formulario-contato"
-                  action=""
+                  method="POST"
+                  name="meu-portfolio"
+                  action="https://sheetdb.io/api/v1/edddm5g9sao8j"
                   id="form"
                 >
                   <input
@@ -256,35 +262,25 @@
                     id="nome"
                     class="input-field"
                     placeholder="Nome"
+                    name="data[nome]"
                   />
                   <input
                     type="text"
                     id="email"
                     class="input-field"
                     placeholder="Email"
+                    name="data[email]"
                   />
                   <textarea
                     id="mensagem"
                     placeholder="Mensagem"
                     class="text-area"
+                    name="data[mensagem]"
                   ></textarea>
                   <button id="enviar" class="btn form-button" type="submit">
                     Enviar <i class="uil uil-message"></i>
                   </button>
                 </form>
-                <div
-                  id="message"
-                  style="
-                    display: none;
-                    margin: 20px;
-                    font-weight: bold;
-                    color: green;
-                    padding: 8px;
-                    background-color: beige;
-                    border-radius: 4px;
-                    border-color: aquamarine;
-                  "
-                ></div>
               </div>
             </div>
           </div>
@@ -351,4 +347,23 @@
     <!-- ----- MAIN JS ----- -->
     <script src="assets/js/main.js"></script>
   </body>
+
+  <script>
+    function showModal(message) {
+      const modal = document.getElementById("customModal");
+      modal.querySelector("p").textContent = message;
+      modal.classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("customModal").classList.add("hidden");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (localStorage.getItem("formSubmitted") === "true") {
+        showModal("Mensagem enviada com sucesso!");
+        localStorage.removeItem("formSubmitted");
+      }
+    });
+  </script>
 </html>

@@ -109,93 +109,16 @@ function scrollActive() {
 
 window.addEventListener("scroll", scrollActive);
 
-document.getElementById("form").addEventListener("submit", function (e) {
-  e.preventDefault(); // Prevent the default form submission
-  document.getElementById("message").textContent = "Submitting..";
-  document.getElementById("message").style.display = "block";
-  document.getElementById("enviar").disabled = true;
-
-  // Collect the form data
-  var formData = new FormData(this);
-  var keyValuePairs = [];
-  for (var pair of formData.entries()) {
-    keyValuePairs.push(pair[0] + "=" + pair[1]);
-  }
-
-  var formDataString = keyValuePairs.join("&");
-
-  // Send a POST request to your Google Apps Script
-  fetch(
-    "https://script.google.com/macros/s/AKfycbzOijVX1UWtLeEB2lmGMYmay9KAJTMG1YsSOLAZmhcnTpL3vDdznL92RKHS4n0uERJF3g/exec",
-    {
-      redirect: "follow",
-      method: "POST",
-      body: formDataString,
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-    }
-  )
-    .then(function (response) {
-      // Check if the request was successful
-      if (response) {
-        return response; // Assuming your script returns JSON response
-      } else {
-        throw new Error("Failed to submit the form.");
-      }
-    })
-    .then(function (data) {
-      // Display a success message
-      document.getElementById("message").textContent =
-        "Data submitted successfully!";
-      document.getElementById("message").style.display = "block";
-      document.getElementById("message").style.backgroundColor = "green";
-      document.getElementById("message").style.color = "beige";
-      document.getElementById("enviar").disabled = false;
-      document.getElementById("form").reset();
-
-      setTimeout(function () {
-        document.getElementById("message").textContent = "";
-        document.getElementById("message").style.display = "none";
-      }, 2600);
-    })
-    .catch(function (error) {
-      // Handle errors, you can display an error message here
-      console.error(error);
-      document.getElementById("message").textContent =
-        "An error occurred while submitting the form.";
-      document.getElementById("message").style.display = "block";
+const form = document.getElementById("form");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  fetch(form.action, {
+    method: "POST",
+    body: new FormData(document.getElementById("form")),
+  })
+    .then((response) => response.json())
+    .then((html) => {
+      localStorage.setItem("formSubmitted", "true");
+      window.open("index.html");
     });
 });
-
-/*
-No Google Sheets:
-const DATA_ENTRY_SHEET_NAME = "Dados";
-const TIME_STAMP_COLUMN_NAME = "Timestamp"; 
-var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_ENTRY_SHEET_NAME);
-const doPost = (request = {}) => {
-  const { postData: { contents, type } = {} } = request;
-  var data = parseFormData(contents);
-  appendToGoogleSheet(data);
- return ContentService.createTextOutput(contents).setMimeType(ContentService.MimeType.JSON);
-};
-function parseFormData(postData) {
-  var data = [];
-  var parameters = postData.split('&');
-  for (var i = 0; i < parameters.length; i++) {
-    var keyValue = parameters[i].split('=');
-    data[keyValue[0]] = decodeURIComponent(keyValue[1]);
-  }
-  return data;
-}
-function appendToGoogleSheet(data) {
-  if(TIME_STAMP_COLUMN_NAME !==""){
-    data[TIME_STAMP_COLUMN_NAME]=new Date();
-  }
-  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  var rowData = headers.map(headerFld => data[headerFld]);
-  sheet.appendRow(rowData);
-}
-
-*/
